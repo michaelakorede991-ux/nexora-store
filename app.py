@@ -1,14 +1,24 @@
+import os
+import shutil
 import sqlite3
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import uuid
 
 app = Flask(__name__)
 
-app.secret_key = "nexora-dev-secret-change-this-later"
+app.secret_key = os.environ.get("SECRET_KEY", "nexora-dev-secret-change-this-later")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SOURCE_DB = os.path.join(BASE_DIR, "store.db")
+DB_PATH = "/tmp/store.db" if os.environ.get("VERCEL") else SOURCE_DB
 
 
 def get_db_connection():
-    connection = sqlite3.connect("store.db")
+    # On Vercel the project folder is read-only, so copy the DB to /tmp once
+    if DB_PATH != SOURCE_DB and not os.path.exists(DB_PATH):
+        shutil.copyfile(SOURCE_DB, DB_PATH)
+
+    connection = sqlite3.connect(DB_PATH)
     connection.row_factory = sqlite3.Row
     return connection
 
