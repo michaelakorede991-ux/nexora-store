@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us — Nexora Store{% endblock %}
+
+{% block content %}
+
+    <section class="contact" id="contact">
+        <p class="eyebrow">CONTACT US</p>
+        <h2>We'd Love to Hear From You</h2>
+
+        <div class="contact-wrap">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h4>Address</h4>
+                    <p>Your store address here</p>
+                </div>
+                <div class="contact-item">
+                    <h4>Phone / WhatsApp</h4>
+                    <p>+234 000 000 0000</p>
+                </div>
+                <div class="contact-item">
+                    <h4>Email</h4>
+                    <p>hello@yourstore.com</p>
+                </div>
+                <div class="contact-item">
+                    <h4>Opening Hours</h4>
+                    <p>Mon – Sat, 9:00am – 6:00pm</p>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <input type="text" placeholder="Your name">
+                <input type="email" placeholder="Your email">
+                <textarea rows="5" placeholder="How can we help?"></textarea>
+                <button class="btn">SEND MESSAGE</button>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Collections — Nexora Store{% endblock %}
+
+{% block content %}
+
+    <section class="collections" id="collections">
+        <p class="eyebrow">OUR COLLECTIONS</p>
+        <h2>Find Your Signature Tool</h2>
+
+        <div class="collection-grid">
+            <a href="{{ url_for('collections', category='clippers') }}" class="collection-tile" style="background-image: url('{{ url_for('static', filename='images/vintage-t9-clipper.png') }}');">
+                <div class="tile-overlay"><h3>Clippers</h3><span>Explore →</span></div>
+            </a>
+            <a href="{{ url_for('collections', category='trimmers') }}" class="collection-tile" style="background-image: url('{{ url_for('static', filename='images/pro-cordless-trimmer.png') }}');">
+                <div class="tile-overlay"><h3>Trimmers</h3><span>Explore →</span></div>
+            </a>
+            <a href="{{ url_for('collections', category='grooming-kits') }}" class="collection-tile" style="background-image: url('{{ url_for('static', filename='images/grooming-kits.png') }}');">
+                <div class="tile-overlay"><h3>Grooming Kits</h3><span>Explore →</span></div>
+            </a>
+        </div>
+
+        <h2 class="sub-heading">Best Sellers</h2>
+
+        <div class="filters-row">
+            <form action="{{ url_for('collections') }}" method="GET" class="search-bar">
+                <div class="search-wrap">
+                    <input type="text" id="search-input" name="search" placeholder="Search products..." value="{{ search_query }}" autocomplete="off">
+                    <div id="search-dropdown" class="search-dropdown"></div>
+                </div>
+                <button type="submit" class="btn">SEARCH</button>
+                <input type="hidden" name="sort" value="{{ sort_option }}">
+            </form>
+
+            <form action="{{ url_for('collections') }}" method="GET" class="sort-bar">
+                <input type="hidden" name="search" value="{{ search_query }}">
+                <label for="sort">Sort by:</label>
+                <select name="sort" id="sort" onchange="this.form.submit()">
+                    <option value="">Featured</option>
+                    <option value="price_low" {% if sort_option == "price_low" %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price_high" {% if sort_option == "price_high" %}selected{% endif %}>Price: High to Low</option>
+                    <option value="stock_low" {% if sort_option == "stock_low" %}selected{% endif %}>Stock: Low to High</option>
+                    <option value="stock_high" {% if sort_option == "stock_high" %}selected{% endif %}>Stock: High to Low</option>
+                </select>
+            </form>
+            </div>
+
+            <div class="product-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    <div class="product-image">
+                        {% if product["name"] == "Vintage T9 Clipper" %}
+                            <img src="{{ url_for('static', filename='images/vintage-t9-clipper.png') }}" alt="{{ product['name'] }}">
+                        {% elif product["name"] == "Pro Cordless Trimmer" %}
+                            <img src="{{ url_for('static', filename='images/pro-cordless-trimmer.png') }}" alt="{{ product['name'] }}">
+                        {% elif product["name"] == "Gold Edge Clipper" %}
+                            <img src="{{ url_for('static', filename='images/gold-edge-clipper.png') }}" alt="{{ product['name'] }}">
+                        {% elif product["name"] == "Barber Essentials Kit" %}
+                            <img src="{{ url_for('static', filename='images/barber-essentials-kit.png') }}" alt="{{ product['name'] }}">
+                        {% endif %}
+                    </div>
+                    <h3>{{ product["name"] }}</h3>
+                    <p class="price">₦{{ "{:,.0f}".format(product["price"]) }}</p>
+
+                    {% if product["stock_quantity"] > 0 %}
+                        <p class="stock">{{ product["stock_quantity"] }} items left</p>
+                        <button class="btn add-to-cart-btn" data-product-id="{{ product['id'] }}">ADD TO CART</button>
+                    {% else %}
+                        <p class="stock out">Out of stock</p>
+                        <button class="btn" disabled>SOLD OUT</button>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+    <script>
+    const searchInput = document.getElementById("search-input");
+    const dropdown = document.getElementById("search-dropdown");
+
+    searchInput.addEventListener("input", async () => {
+        const query = searchInput.value.trim();
+
+        if (query.length === 0) {
+            dropdown.innerHTML = "";
+            dropdown.style.display = "none";
+            return;
+        }
+
+        const response = await fetch(`/search-suggestions?q=${encodeURIComponent(query)}`);
+        const results = await response.json();
+
+        if (results.length === 0) {
+            dropdown.innerHTML = `<div class="dropdown-item">No matches</div>`;
+        } else {
+            dropdown.innerHTML = results.map(product => `
+                <div class="dropdown-item" onclick="window.location.href='{{ url_for('collections') }}?search=${encodeURIComponent(product.name)}'">
+                    <span>${product.name}</span>
+                    <span class="dropdown-price">₦${Number(product.price).toLocaleString()}</span>
+                </div>
+            `).join("");
+        }
+
+        dropdown.style.display = "block";
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".search-wrap")) {
+            dropdown.style.display = "none";
+        }
+    });
+    document.querySelectorAll(".add-to-cart-btn").forEach(button => {
+    button.addEventListener("click", async () => {
+        const productId = button.dataset.productId;
+
+        const response = await fetch(`/add-to-cart/${productId}`, {
+            method: "POST"
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            document.querySelector(".cart-link").textContent = `Cart (${data.cart_count})`;
+            button.textContent = "ADDED ✓";
+            setTimeout(() => { button.textContent = "ADD TO CART"; }, 1200);
+        }
+    });
+});
+    </script>
+
+{% endblock %}

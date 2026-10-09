@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Nexora Store — The Art of the Perfect Cut{% endblock %}
+
+{% block content %}
+
+    <section class="hero" id="home">
+        <div class="hero-text">
+            <p class="eyebrow">THE SIGNATURE COLLECTION</p>
+            <h1>The Art of the <span class="gold-text">Perfect Cut</span></h1>
+            <p class="hero-sub">
+                Precision-engineered clippers finished in gold. An exquisite gift
+                for the man who takes his grooming seriously.
+            </p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('collections') }}" class="btn">SHOP THE COLLECTION</a>
+                <a href="#featured" class="btn btn-outline">DISCOVER MORE</a>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="trust-strip">
+        <div class="trust-item"><span>◆</span> Quality Checked</div>
+        <div class="trust-item"><span>◆</span> Secure Payment</div>
+        <div class="trust-item"><span>◆</span> Fast Delivery</div>
+        <div class="trust-item"><span>◆</span> Friendly Support</div>
+    </section>
+
+        <section class="overview" id="featured">
+            <div class="overview-image">
+                <img src="{{ url_for('static', filename='images/vintage-t9-clipper.png') }}" alt="{{ product['name'] }}">
+            </div>
+            <div class="overview-info">
+                <p class="eyebrow">FEATURED PRODUCT</p>
+                <h2>{{ product["name"] }}</h2>
+                <p class="overview-price">
+                    ₦{{ "{:,.0f}".format(product["price"]) }}
+                </p>
+                <p class="overview-note">
+                    Due to air transportation restrictions, liquids cannot be transported,
+                    so oil bottles are not included in the package. Please be aware.
+                </p>
+                <ul class="check-list">
+                    <li>Rechargeable clipper</li>
+                    <li>Charging time: 2 hours</li>
+                    <li>Using time: 45 minutes</li>
+                </ul>
+
+                {% if product["stock_quantity"] > 0 %}
+                    <p class="stock">{{ product["stock_quantity"] }} items left</p>
+                    <button class="btn add-to-cart-btn" data-product-id="{{ product['id'] }}">ADD TO CART</button>
+                {% else %}
+                    <p class="stock out">Out of stock</p>
+                    <button class="btn" disabled>SOLD OUT</button>
+                {% endif %}
+            </div>
+        </section>
+
+    <section class="feature">
+        <div class="feature-image">
+            <img src="{{ url_for('static', filename='images/cutter-head.png') }}" alt="Stainless steel cutter head">
+        </div>
+        <div class="feature-info">
+            <p class="eyebrow">CRAFTSMANSHIP</p>
+            <h2>Stainless Steel Cutter Head</h2>
+            <p>
+                A zero-distance cutter head designed to keep you safe, with sharp
+                blades made for clean lines and free-style hairstyles.
+            </p>
+            <h4>Package Included</h4>
+            <ul class="check-list">
+                <li>1 pc hair trimmer</li>
+                <li>1 pc brush</li>
+                <li>6 pcs limit comb</li>
+                <li>1 pc USB charger</li>
+            </ul>
+            <a href="{{ url_for('collections') }}" class="btn">BUY IT NOW</a>
+        </div>
+    </section>
+
+    <section class="benefits">
+        <p class="eyebrow">WHY NEXORA</p>
+        <h2>Designed With Your Hair in Mind</h2>
+        <div class="benefit-grid">
+            <div class="benefit"><div class="icon">🧴</div><p>SAFE FOR THE SKIN</p></div>
+            <div class="benefit"><div class="icon">✨</div><p>EASY TO CLEAN</p></div>
+            <div class="benefit"><div class="icon">💧</div><p>WASHABLE BLADES</p></div>
+            <div class="benefit"><div class="icon">⚡</div><p>FAST CHARGING</p></div>
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmed — Nexora Store{% endblock %}
+
+{% block content %}
+
+    <section class="confirmation-page">
+        <p class="eyebrow">THANK YOU</p>
+        <h2>Order Confirmed</h2>
+        <p class="confirmation-sub">Order #{{ order["id"] }} — Status: {{ order["status"] }}</p>
+
+        <div class="confirmation-list">
+            {% for item in items %}
+            <div class="summary-row">
+                <span>{{ item["name"] }} × {{ item["quantity"] }}</span>
+                <span>₦{{ "{:,.0f}".format(item["price_at_purchase"] * item["quantity"]) }}</span>
+            </div>
+            {% endfor %}
+            <div class="summary-total">
+                <span>Total</span>
+                <span>₦{{ "{:,.0f}".format(order["total"]) }}</span>
+            </div>
+        </div>
+
+        <a href="{{ url_for('collections') }}" class="btn">CONTINUE SHOPPING</a>
+    </section>
+
+{% endblock %}

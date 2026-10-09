@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}About Us — Nexora Store{% endblock %}
+
+{% block content %}
+
+    <section class="about" id="about">
+        <div class="about-image">
+            <img src="{{ url_for('static', filename='images/grooming-kits.png') }}" alt="Nexora grooming essentials">
+        </div>
+        <div class="about-info">
+            <p class="eyebrow">ABOUT US</p>
+            <h2>Grooming, Elevated</h2>
+            <p>
+                Nexora was started with one idea: everyday grooming tools should
+                feel as good as they perform. Write your own story here: who you
+                are, why you started, and what makes your store different.
+            </p>
+            <p>
+                Every product in our collection is chosen for quality, precision
+                and lasting value.
+            </p>
+            <ul class="check-list">
+                <li>Carefully selected products</li>
+                <li>Gift-ready packaging</li>
+                <li>Support that actually replies</li>
+            </ul>
+        </div>
+    </section>
+
+{% endblock %}
